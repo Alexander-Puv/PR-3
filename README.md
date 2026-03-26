@@ -1,0 +1,163 @@
+# Практическая работа №3. Обработка событий клика
+#### Цель работы: Изучить механизм обработки событий в Android. Научиться обрабатывать нажатия на элементы интерфейса (кнопки) с помощью декларативного подхода (XML) и программного подхода (Java). Освоить работу с идентификаторами ресурсов и Toast-уведомлениями
+
+Выполнил ИНС-б-о-24-1, Пузанов Александр Александрович
+
+### Ход выполнения практической работы:
+#### 1. Созданная кнопка:
+![img.png](%D0%BF%D0%B8%D0%BA%D1%87%D0%B8/img.png)
+#### 2. Сообщение при нажатии:
+![img_1.png](%D0%BF%D0%B8%D0%BA%D1%87%D0%B8/img_1.png)
+#### 3. Изменённый при нажатии текст:
+![img_2.png](%D0%BF%D0%B8%D0%BA%D1%87%D0%B8/img_2.png)
+#### 4. Различные события для разных кнопок:
+![img_3.png](%D0%BF%D0%B8%D0%BA%D1%87%D0%B8/img_3.png)
+### Ход выполнения задания для самостоятельного выполнения:
+#### 5. Задания 1-2:
+Код:
+```kotlin
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_main)
+
+        val button1 = findViewById<Button?>(R.id.button1)
+        val button2 = findViewById<Button?>(R.id.button2)
+
+        val commonListener: View.OnClickListener = View.OnClickListener { v ->
+            if (v.id == R.id.button1) {
+                Toast.makeText(this, "Пузанов А.А.", Toast.LENGTH_SHORT).show()
+            } else {
+                (v as Button).text = "Пузанов"
+            }
+        }
+
+        button1.setOnClickListener(commonListener)
+        button2.setOnClickListener(commonListener)
+    }
+}
+```
+Результат:
+
+![img_4.png](%D0%BF%D0%B8%D0%BA%D1%87%D0%B8/img_4.png)
+#### 6. Задание 3:
+Код:
+```kotlin
+button1.setOnClickListener {
+    Toast.makeText(
+        this@MainActivity,
+        "Пузанов. Нажата кнопка 1",
+        Toast.LENGTH_SHORT
+    ).show()
+}
+
+button2.setOnClickListener {
+    Toast.makeText(
+        this@MainActivity,
+        "Пузанов. Нажата кнопка 2",
+        Toast.LENGTH_SHORT
+    ).show()
+}
+
+button3.setOnClickListener {
+    Toast.makeText(
+        this@MainActivity,
+        "Пузанов. Нажата кнопка 3",
+        Toast.LENGTH_SHORT
+    ).show()
+}
+```
+Результат:
+
+![img_5.png](%D0%BF%D0%B8%D0%BA%D1%87%D0%B8/img_5.png)
+#### 7. Задание 4:
+Код:
+```kotlin
+val commonListener: View.OnClickListener = View.OnClickListener { v ->
+    if (v.id == R.id.button1) {
+        Toast.makeText(this, "Пузанов. Кнопка 1", Toast.LENGTH_SHORT).show()
+    } else if (v.id == R.id.button2) {
+        Toast.makeText(this, "Пузанов. Кнопка 2", Toast.LENGTH_SHORT).show()
+    } else {
+        Toast.makeText(this, "Пузанов. Кнопка 3", Toast.LENGTH_SHORT).show()
+    }
+}
+
+button1.setOnClickListener(commonListener)
+button2.setOnClickListener(commonListener)
+button3.setOnClickListener(commonListener)
+```
+Результат:
+
+![img_6.png](%D0%BF%D0%B8%D0%BA%D1%87%D0%B8/img_6.png)
+#### 8. Задание 5:
+Код:
+```kotlin
+class MainActivity : AppCompatActivity() {
+    private var isModeA = true
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_main)
+
+        val button1 = findViewById<Button?>(R.id.button1)
+        val button2 = findViewById<Button?>(R.id.button2)
+
+        button1.setOnClickListener {
+            if (isModeA) {
+                Toast.makeText(this, "Пузанов", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "ИНС-24-1", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        button2.setOnClickListener {
+            isModeA = !isModeA
+
+            Toast.makeText(
+                this,
+                if (isModeA) "Режим A" else "Режим B",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+}
+```
+Результат:
+
+Первая кнопка в режиме A:
+
+![img_7.png](%D0%BF%D0%B8%D0%BA%D1%87%D0%B8/img_7.png)
+
+Перевод в режим B:
+
+![img_8.png](%D0%BF%D0%B8%D0%BA%D1%87%D0%B8/img_8.png)
+
+Первая кнопка в режиме B:
+
+![img_9.png](%D0%BF%D0%B8%D0%BA%D1%87%D0%B8/img_9.png)
+
+Перевод в режим A:
+
+![img_10.png](%D0%BF%D0%B8%D0%BA%D1%87%D0%B8/img_10.png)
+### Контрольные вопросы:
+1. Что такое ViewBinding и в чем его преимущество перед классическим методом findViewById()? (Кратко опишите, как его подключить).
+ViewBinding - механизм для безопасного доступа к View без поиска по id.
+Плюсы: нет null, нет кастов, меньше ошибок
+2. В чем разница между декларативной (XML-атрибут onClick) и программной (setOnClickListener) подпиской на событие? Когда какой способ предпочтительнее?
+onClick (XML) - проще, но менее гибкий
+setOnClickListener - гибкий, можно писать сложную логику
+Когда использовать:
+XML - для простых кнопок
+Listener - почти всегда в реальных приложениях
+3. Что произойдет, если в методе-обработчике, указанном в XML, изменить сигнатуру (например, убрать параметр View v)? Почему?
+Приложение упадёт (Runtime ошибка). Потому что Android ожидает строго метод вида: fun click(view: View)
+4. Опишите жизненный цикл Activity. В каком методе (onCreate, onStart, onResume) лучше всего инициализировать слушатели для кнопок и почему?
+- onCreate - создание
+- onStart - становится видимой
+- onResume - активная работа
+Слушатели лучше ставить в onCreate, потому что UI уже создан и это делается один раз.
+5. Что такое анонимный внутренний класс? Как он используется при установке слушателей событий в Java?
+Это класс без имени, создаётся сразу при объявлении. Используется для обработки событий без создания отдельного класса
